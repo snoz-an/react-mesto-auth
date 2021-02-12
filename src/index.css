@@ -13,6 +13,10 @@
 @import url("./blocks/like/like.css");
 @import url("./blocks/like/_active/like_active.css");
 @import url("./blocks/popup/_img/popup_img.css");
+@import url("./blocks/register/register.css");
+
+
+
 
 /*body {
   margin: 0;

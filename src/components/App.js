@@ -27,21 +27,76 @@ function App() {
 
 
   const [loggedIn, setLoggedIn] = React.useState(false);
-  const [userData, setUserData] = React.useState(null);
+  const [userData, setUserData] = React.useState({
+    email: '',
+     password: ''
+  });
+  //const [message, setMessage] = React.useState('');
   const history = useHistory();
 
 
-  function handleLogin() {
-    setLoggedIn(true);
-  }
-
-  function handleRegister() {
-
-  }
+  
 
   React.useEffect(() => {
     tokenCheck();
   }, []);
+
+
+  const handleLogin = () => {
+    setLoggedIn(true);
+  }
+
+  const handleRegister = (data) => {
+    const {email, password} = data;
+   auth.register(email, password)
+      .then((res) => {
+        debugger;
+        if(!res) {
+          throw new Error('некорректно заполнено одно из полей')
+        }
+        if(res.jwt) {
+          setLoggedIn(true);
+          localStorage.setItem('jwt')
+        }
+      })
+    
+    //const {email, password} = data;
+    //return auth.register(email, password)
+    //.then((res)=>{
+      //debugger;
+   // })
+      }
+
+  /*function tokenCheck() {
+    const jwt = localStorage.getItem('jwt');
+
+    if (jwt) {
+      auth.checkToken(jwt)
+        .then((res) => {
+          if (res) {
+            setUserData({
+              id: res.data._id,
+              email: res.data.email
+            });
+            setLoggedIn(true);
+            history.push('/');
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          history.push('/sign-in');
+        });
+    }
+  }*/
+
+  function tokenCheck() {
+    if (localStorage.getItem('jwt')) {
+    let jwt = localStorage.getItem('jwt');
+    }
+  }
+  
+
+
 
   React.useEffect(()=>{
     api.getInitialCards()
@@ -62,29 +117,6 @@ function App() {
           console.log(err)
       })
   }, [])
-
-
-  function tokenCheck() {
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      auth.checkToken(jwt)
-        .then((res) => {
-          if (res) {
-            setUserData({
-              id: res.data._id,
-              email: res.data.email
-            });
-            setLoggedIn(true);
-            history.push('/');
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          history.push('/sign-in');
-        });
-    }
-  }
-  
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
@@ -187,10 +219,10 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <Header userData={userData} loggedIn={loggedIn} />
       <Switch>
-      <ProtectedRoute exact path="/" loggedIn={loggedIn} component={Main} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} 
+      <ProtectedRoute exact path="/" loggedIn={loggedIn} component={Main && <Footer />} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} 
         onCardClick={handleCardClick} onCardLike={handleCardLike} onCardDelete={handleCardDelete} cards={cards} />
        <Route path="/sign-up">
-          <Register onRegister={handleRegister} />
+          <Register onRegister={handleRegister} tokenCheck={tokenCheck}/>
        </Route>
 
        <Route path="/sign-in">
@@ -200,7 +232,7 @@ function App() {
               {loggedIn ? <Redirect to="/"/> : <Redirect to="/sign-in"/>}
             </Route>
       </Switch>
-      <Footer/>
+      
       <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
       <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/> 
       <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateAvatar} /> 
