@@ -2,6 +2,9 @@
 @import url("./__in-link/header__in-link.css");
 @import url("./__nav/header__nav.css");
 @import url("./__registration-link/header__registration-link.css");
+@import url("./__data/header__data.css");
+@import url("./__email/header__email.css");
+@import url("./__button-out/header__button-out.css");
 
 
 .header {
