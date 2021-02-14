@@ -22,7 +22,7 @@ function Card(props) {
     const isLiked = cardData.likes.some(i => i._id === currentUser._id);
 
     return(
-        <div key={cardData.id} className="card">
+        <div className="card">
             <img src = {cardData.link} alt={cardData.name} className="card__img" onClick={handleClick} />
             <div className="card__name-container">
                 <h3 className="card__name">{cardData.name}</h3>
